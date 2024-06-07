@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markov Simulator Front End</title>
+</head>
+<body>
+  <div>RUNNING MARKOV</div>
+  <div>Instructions</div>
+  <div>(1) Use MarkovBot to ask for two proteins with the corresponding properties of your choices that you plan to run in the docking simulation</div>
+  <div>(2) Submit two proteins then press run simulation to run the simulation</div>
+  <div>(3) If you entered an incorrect protein then submit two prteins again and run the simulation as usual</div>
+  <div>(4) Docking simulation will take about three hours to complete</div>
+  <div>Best! Integral Sequencing Team</div>
+  <form id="searchForm">
+    <input type="text" id="searchInput" placeholder="Protein">
+    <button type="submit">Search</button>
+  </form>
+  <form id="runLightdock">
+    <button type="button">Run Docking Simulation</button>
+  </form>
+  <div id="status">Waiting for file...</div>
+  <div id="fileContent">File content will be displayed here.</div>
+  <script>
+  async function fetchFileContent() {
+    try {
+      const response = await fetch('http://localhost:3000/search');
+      if (response.ok) {
+        const text = await response.text();
+        document.getElementById('fileContent').innerText = text;
+        document.getElementById('status').innerText = 'File content loaded!';
+      } else {
+        console.error("Error fetching the file:", response.status);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  // Check for file updates and fetch content every 5 seconds
+  setInterval(fetchFileContent, 5000);
+  </script>
+  <script src="client.js"></script>
+  <script src="simulate/client.js"></script>
+</body>
+</html>
